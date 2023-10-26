@@ -9,7 +9,12 @@
             "request": "launch",
             "name": "Launch Chrome against localhost",
             "url": "http://localhost:5174",
-            "webRoot": "${workspaceFolder}/src"
+            "webRoot": "${workspaceFolder}/src",
+            "skipFiles": [
+                "${workspaceFolder}/node_modules/**",
+                "${workspaceFolder}/lib/**/*.js",
+                "<node_internals>/**"
+            ]
         }
     ]
 }
