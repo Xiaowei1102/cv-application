@@ -40,3 +40,22 @@
 .read-the-docs {
   color: #888;
 } */
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: antiquewhite
+}
+
+#root {
+  display: flex;
+
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+}
+.returnedCv {
+  display: flex;
+  flex-direction: column;
+}

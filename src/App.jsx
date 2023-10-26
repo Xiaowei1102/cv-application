@@ -74,10 +74,34 @@ function App() {
   }
   console.log(userInfo);
 
-  function handleSubmit(e) {
+  function handleSubmit() {
     //do nothing but hide the forms...
-    
+    const forms = document.getElementsByTagName('form')
+    //forms is a nodeList, do not have array method; need to convert to array first
+
+    Array.from(forms).forEach(form => {
+      form.style.display = "none";
+    })
+
   }
+
+  function handleEdit(e) {
+    //simply display the forms in this section
+    let forms;
+    if(e.target.className.includes('education')) {
+      forms = document.querySelectorAll(".educationContainer>form")
+      forms.forEach(form => {
+        form.style.display = "block";
+      })
+    } else {
+      forms = document.querySelectorAll(".workContainer>form")
+      forms.forEach(form => {
+        form.style.display = "block";
+      })
+
+    }
+  }
+
 
   function addItemToArray(array, event) {
     const newId = array[0].length + array[1].length + array[2].length;
@@ -105,6 +129,25 @@ function App() {
     setUserInfo(addItemToArray(userInfo, e))
   }
 
+  function deleteItemFromArray(array, event) {
+    const newArray = JSON.parse(JSON.stringify(array));
+    let index;
+    for (let i in newArray) {
+      for (let j in newArray[i]) {
+        if(newArray[i][j].id === Number(event.target.parentElement.id)) {
+          newArray[i].splice(j, 1);
+          return newArray;
+        }
+      }
+    }
+    //if not found
+    return newArray;
+  }
+
+  function handleDelete(e) {
+    setUserInfo(deleteItemFromArray(userInfo, e))
+  }
+
   return (
     <>
       <div className='form'>
@@ -112,10 +155,12 @@ function App() {
           <div className='personalTitle'>Personal Information</div>
           <PersonalInformationForm  handleChange = {handleChange}/>
         </div>
-        <div className='eductionContainer'>
+        {/* another  mis-spell ugh */}
+        <div className='educationContainer'>
           <div className='educationAndButton'>
             <div className='educationTitle'>Education</div>
             <button className='educationButton' onClick={handleAdd}>+</button>
+            <button className='educationEditButton' onClick={handleEdit}>Edit</button>
           </div>
             {userInfo[1].map(item => (
               <EducationForm education={item} handleChange={handleChange} />
@@ -125,12 +170,14 @@ function App() {
           <div className='workAndButton'>
             <div className='workTitle'>Experience</div>
             <button className='workButton' onClick={handleAdd}>+</button>
+            <button className='workEditButton' onClick={handleEdit}>Edit</button>
           </div>
           {userInfo[2].map(item => (
               <WorkForm work={item} handleChange={handleChange} />
             ))}
         </div> 
-        <button onSubmit={handleSubmit}>Submit</button> 
+        {/* can not use onSubmit bcz there is no form, need to use onClick */}
+        <button onClick={handleSubmit}>Submit</button> 
       </div>
       <div className='returnedCv'>
         <GenerateCv userInfo={userInfo} />
@@ -154,7 +201,7 @@ function PersonalInformationForm({handleChange}){
   )
 }
 
-function EducationForm({education, handleChange}) {
+function EducationForm({education, handleChange, handleDelete}) {
   return(
     <form action="./page" id={education.id} key={education.id}>
       <label >School Name</label>
@@ -163,11 +210,12 @@ function EducationForm({education, handleChange}) {
       <input type="text" name='major' value={education.major} onChange={handleChange}/>
       <label >Date of Study</label>
       <input type="text" name='dateOfStudy' value={education.dateOfStudy} onChange={handleChange}/>
+      <button className='delete' onClick={handleDelete}>Delete</button>
     </form>
   )
 }
 
-function WorkForm({work, handleChange}) {
+function WorkForm({work, handleChange, handleDelete}) {
   return (
     <form action="./page" id={work.id} key={work.id}>
       <label>Company Name</label>
@@ -178,7 +226,7 @@ function WorkForm({work, handleChange}) {
       <input type="text" name='responsibility' value={work.responsibility} onChange={handleChange}/>
       <label>Start-End Date</label>
       <input type="text" name='dateOfWork' value={work.dateOfWork} onChange={handleChange}/>
-
+      <button className='delete' onClick={handleDelete}>Delete</button>
     </form>
   )
 }
