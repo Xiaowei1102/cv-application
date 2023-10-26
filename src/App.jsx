@@ -80,7 +80,9 @@ function App() {
     //forms is a nodeList, do not have array method; need to convert to array first
 
     Array.from(forms).forEach(form => {
-      form.style.display = "none";
+      if(form.parentElement.className !== "personalContainer") {
+        form.style.display = "none";
+      }
     })
 
   }
@@ -91,12 +93,12 @@ function App() {
     if(e.target.className.includes('education')) {
       forms = document.querySelectorAll(".educationContainer>form")
       forms.forEach(form => {
-        form.style.display = "block";
+        form.style.display = "flex";
       })
     } else {
       forms = document.querySelectorAll(".workContainer>form")
       forms.forEach(form => {
-        form.style.display = "block";
+        form.style.display = "flex";
       })
 
     }
