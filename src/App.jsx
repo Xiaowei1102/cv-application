@@ -42,6 +42,8 @@ function App() {
 
   ]
   const [userInfo, setUserInfo] = useState(initialInfo);
+  //this lastId refers to the id if you add an object to the current userInfo
+  const [lastId, setLastId] = useState(3);
 
   function changeInput(array, event) {
     //Need to return a new Array, can not modify the original one!!!
@@ -105,8 +107,10 @@ function App() {
   }
 
 
-  function addItemToArray(array, event) {
-    const newId = array[0].length + array[1].length + array[2].length;
+  function addItemToArray(newId, array, event) {
+    //below will cause id colision once you delete an item and add a new item..
+    //const newId = array[0].length + array[1].length + array[2].length;
+    //therefore, just make sure the id always goes up, and can not use global variable bcz it will rerender..
     const newArray = JSON.parse(JSON.stringify(array));
     if (event.target.className.includes('education')) {
       newArray[1].push({
@@ -128,7 +132,9 @@ function App() {
   }
 
   function handleAdd(e) {
-    setUserInfo(addItemToArray(userInfo, e))
+    //have react update this number for next rerendering
+    setLastId(lastId + 1)
+    setUserInfo(addItemToArray(lastId, userInfo, e))
   }
 
   function deleteItemFromArray(array, event) {
@@ -165,7 +171,7 @@ function App() {
             <button className='educationEditButton' onClick={handleEdit}>Edit</button>
           </div>
             {userInfo[1].map(item => (
-              <EducationForm education={item} handleChange={handleChange} />
+              <EducationForm education={item} handleChange={handleChange} handleDelete={handleDelete}/>
             ))}
         </div>
         <div className='workContainer'>
@@ -175,7 +181,7 @@ function App() {
             <button className='workEditButton' onClick={handleEdit}>Edit</button>
           </div>
           {userInfo[2].map(item => (
-              <WorkForm work={item} handleChange={handleChange} />
+              <WorkForm work={item} handleChange={handleChange} handleDelete={handleDelete}/>
             ))}
         </div> 
         {/* can not use onSubmit bcz there is no form, need to use onClick */}
